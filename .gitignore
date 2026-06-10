@@ -1,0 +1,23 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE files
+.vscode/
+.idea/
+
+# Distribution
+build/
+dist/
+*.egg-info/
+.venv/
+venv/
+
+# Environment rules
+rules/
+

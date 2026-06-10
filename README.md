@@ -14,7 +14,7 @@ packages/python/code-review-buddy/
 │   ├── api/
 │   │   └── mcp/
 │   │       ├── server.py           # Launch and transport initialization
-│   │       ├── router.py           # Exposes Resources (project://readme, project://change_log)
+│   │       ├── router.py           # Exposes Resources (project://readme)
 │   │       └── tools.py            # Maps and registers tools (list_files, read_file, get_git_diff, etc.)
 │   ├── features/
 │   │   ├── fs/
@@ -41,7 +41,7 @@ packages/python/code-review-buddy/
 
 ### Resources
 - **`project://readme`**: Exposes the repository's `README.md`.
-- **`project://change_log`**: Exposes decision log / change.log from `llm-observability-platform/logs/change.log`.
+
 
 ## Installation & Setup
 

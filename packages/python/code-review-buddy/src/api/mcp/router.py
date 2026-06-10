@@ -27,16 +27,4 @@ def register_resources(mcp: FastMCP) -> None:
                 return f.read()
         except Exception as e:
             return f"Error reading README.md: {str(e)}"
-        
-    @mcp.resource("project://change_log")
-    def get_change_log() -> str:
-        """Expose the repository's decision log / change.log as a resource."""
-        change_log_path = Path(REPO_ROOT) / "llm-observability-platform/logs/change.log"
-        if not change_log_path.is_file():
-            return "change.log file not found."
-        
-        try:
-            with open(change_log_path, "r", encoding="utf-8", errors="replace") as f:
-                return f.read()
-        except Exception as e:
-            return f"Error reading change.log: {str(e)}"
+
