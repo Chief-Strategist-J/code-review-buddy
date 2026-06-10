@@ -58,8 +58,10 @@ const server = http.createServer((req, res) => {
   // Since this gateway is the only entry point, spoofing localhost here is safe.
   const forwardHeaders = { ...req.headers };
   if (targetPort === 6277) {
-    forwardHeaders['origin'] = `http://localhost:${6277}`;
-    forwardHeaders['host'] = `localhost:${6277}`;
+    // Proxy allowedOrigins defaults to [http://localhost:6274, http://127.0.0.1:6274]
+    // (the inspector UI's port, not the proxy's own port — see proxy server/build/index.js:76-78)
+    forwardHeaders['origin'] = 'http://localhost:6274';
+    forwardHeaders['host'] = 'localhost:6277';
   }
 
   const connector = http.request({
