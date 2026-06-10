@@ -24,6 +24,8 @@ const server = http.createServer((req, res) => {
   const isProxy = req.url.startsWith('/config') || req.url.startsWith('/health') || req.url.startsWith('/sse') || req.url.startsWith('/see') || req.url.startsWith('/messages');
   const targetPort = isProxy ? 6277 : 6274;
 
+  console.log(`[Gateway] --> ${req.method} ${req.url} (Routing to local port ${targetPort})`);
+
   const connector = http.request({
     host: '127.0.0.1',
     port: targetPort,
@@ -31,6 +33,7 @@ const server = http.createServer((req, res) => {
     method: req.method,
     headers: req.headers
   }, (targetRes) => {
+    console.log(`[Gateway] <-- ${targetRes.statusCode} for ${req.url} from local port ${targetPort}`);
     const headers = { ...targetRes.headers };
     // Prevent Cloudflare/Render Nginx reverse proxies from buffering SSE streams
     if (req.url.includes('/sse') || req.url.includes('/see')) {
@@ -43,6 +46,7 @@ const server = http.createServer((req, res) => {
   });
 
   connector.on('error', (err) => {
+    console.error(`[Gateway] ERROR: Failed to forward request ${req.url} to port ${targetPort}. Reason: ${err.message}`);
     res.writeHead(502);
     res.end(`Gateway connection to local port ${targetPort} failed: ${err.message}`);
   });
