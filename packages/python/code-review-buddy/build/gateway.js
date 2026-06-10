@@ -20,7 +20,7 @@ const inspector = spawn('npx', [
 const server = http.createServer((req, res) => {
   // Route /config, /health, /sse, /messages to the Proxy Server (6277).
   // Route static assets and UI routes to the Inspector Web Server (6274).
-  const isProxy = req.url.startsWith('/config') || req.url.startsWith('/health') || req.url.startsWith('/sse') || req.url.startsWith('/messages');
+  const isProxy = req.url.startsWith('/config') || req.url.startsWith('/health') || req.url.startsWith('/sse') || req.url.startsWith('/see') || req.url.startsWith('/messages');
   const targetPort = isProxy ? 6277 : 6274;
 
   const connector = http.request({
