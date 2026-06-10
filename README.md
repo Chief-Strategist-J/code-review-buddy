@@ -117,3 +117,17 @@ packages/python/code-review-buddy/
    }
    ```
 
+## Testing & Debugging (Without Claude Desktop)
+
+You can test the MCP server in your browser using the official **MCP Inspector** tool without needing to configure a desktop app.
+
+Run the following command to spin up the inspector interface:
+
+```bash
+npx @modelcontextprotocol/inspector docker run -i --rm \
+  -v /home/btpl-lap-22/live/codeReview:/project \
+  -e REPO_ROOT=/project \
+  chiefj/code-review-buddy:latest
+```
+
+Open the link shown in your terminal (typically `http://localhost:6274`) to test all tools and resources interactively.
