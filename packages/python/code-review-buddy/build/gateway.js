@@ -44,9 +44,11 @@ const server = http.createServer((req, res) => {
   // /config — inspector UI fetches server defaults on load
   // /messages — SSE POST message channel
   // Route everything else (static assets, UI) to the Inspector Web Server (6274).
+  // /message (singular) is the POST channel for stdio/sse sessions; startsWith('/message')
+  // also covers /messages if the inspector ever uses that form.
   const isProxy = req.url.startsWith('/stdio') || req.url.startsWith('/sse') ||
     req.url.startsWith('/see') || req.url.startsWith('/mcp') ||
-    req.url.startsWith('/config') || req.url.startsWith('/messages');
+    req.url.startsWith('/config') || req.url.startsWith('/message');
   const targetPort = isProxy ? 6277 : 6274;
 
   console.log(`[Gateway] --> ${req.method} ${req.url} (Routing to local port ${targetPort})`);
