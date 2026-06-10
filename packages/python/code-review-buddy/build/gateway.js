@@ -30,7 +30,14 @@ const server = http.createServer((req, res) => {
     method: req.method,
     headers: req.headers
   }, (targetRes) => {
-    res.writeHead(targetRes.statusCode, targetRes.headers);
+    const headers = { ...targetRes.headers };
+    // Prevent Cloudflare/Render Nginx reverse proxies from buffering SSE streams
+    if (req.url.includes('/sse') || req.url.includes('/see')) {
+      headers['x-accel-buffering'] = 'no';
+      headers['cache-control'] = 'no-cache';
+      headers['connection'] = 'keep-alive';
+    }
+    res.writeHead(targetRes.statusCode, headers);
     targetRes.pipe(res);
   });
 
