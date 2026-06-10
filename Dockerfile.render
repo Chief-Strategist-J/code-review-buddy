@@ -2,14 +2,20 @@ FROM nikolaik/python-nodejs:python3.10-nodejs18-slim
 
 WORKDIR /app
 
-# Install git
+# Install git and clean apt cache
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy project files
+# Pre-install heavy Python dependencies in a cached layer
+RUN pip install --no-cache-dir mcp fastmcp
+
+# Pre-install the MCP inspector globally to avoid downloading at container boot time
+RUN npm install -g @modelcontextprotocol/inspector@0.15.0
+
+# Copy project files and install package without re-downloading dependencies
 COPY packages/python/code-review-buddy /app
-RUN pip install --no-cache-dir .
+RUN pip install --no-cache-dir --no-deps .
 
 # Expose Render's default port
 EXPOSE 10000
