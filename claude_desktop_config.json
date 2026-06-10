@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "code-review-buddy": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-v",
+        "/home/btpl-lap-22/live/codeReview:/project",
+        "-e",
+        "REPO_ROOT=/project",
+        "chiefj/code-review-buddy:latest"
+      ]
+    }
+  }
+}
