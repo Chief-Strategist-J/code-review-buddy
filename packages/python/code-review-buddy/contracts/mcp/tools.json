@@ -1,0 +1,85 @@
+{
+  "tools": [
+    {
+      "name": "list_files",
+      "description": "List all files in a directory relative to the repository root, optionally filtered by file extension.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "directory": {
+            "type": "string",
+            "description": "Relative path to the directory from the repository root"
+          },
+          "extension": {
+            "type": "string",
+            "description": "Optional file extension filter, e.g., '.py', '.java', '.ts'"
+          }
+        },
+        "required": ["directory"]
+      }
+    },
+    {
+      "name": "read_file",
+      "description": "Read the content of a file. Refuses to read files over 500 lines.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string",
+            "description": "Path to the file to read"
+          }
+        },
+        "required": ["file_path"]
+      }
+    },
+    {
+      "name": "get_git_diff",
+      "description": "Get git diff between a base branch and compare branch. Truncated if too large.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "base_branch": {
+            "type": "string",
+            "default": "main",
+            "description": "Base branch to compare from"
+          },
+          "compare_branch": {
+            "type": "string",
+            "default": "HEAD",
+            "description": "Compare branch to compare to"
+          }
+        }
+      }
+    },
+    {
+      "name": "get_recent_commits",
+      "description": "Get recent git commits from the repository.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20,
+            "default": 5,
+            "description": "Number of recent commits to fetch (1-20)"
+          }
+        }
+      }
+    },
+    {
+      "name": "scan_todos",
+      "description": "Scan a directory recursively for files containing TODO, FIXME, HACK, XXX.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "directory": {
+            "type": "string",
+            "description": "Relative or absolute directory path to scan"
+          }
+        },
+        "required": ["directory"]
+      }
+    }
+  ]
+}

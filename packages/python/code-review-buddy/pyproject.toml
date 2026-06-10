@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "code-review-buddy"
+version = "1.0.0"
+description = "Local MCP server for code review assistance"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "mcp>=1.0.0",
+    "fastmcp>=0.1.0",
+]
+
+[project.scripts]
+code-review-buddy = "api.mcp.server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+select = ["ALL"]
+ignore = [
+    "D100",   # Missing docstring in public module
+    "D104",   # Missing docstring in public package
+    "ANN101", # Missing type annotation for self in method
+    "ANN204", # Missing return type annotation for special method
+    "S603",   # subprocess call: check for execution of untrusted input
+    "S607",   # Starting a process with a partial executable path
+    "INP001", # File is part of an implicit namespace package
+    "COM812", # Trailing comma missing
+    "ISC001", # Single line implicit string concatenation
+    "ERA001", # Found commented-out code
+]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.per-file-ignores]
+"tests/*" = ["S101", "D101", "D102", "D103"]
+
+[tool.mypy]
+strict = true
+python_version = "3.10"
+ignore_missing_imports = true
+warn_unused_configs = true
