@@ -3,6 +3,7 @@ const { spawn } = require('child_process');
 
 // Ensure the environment runs without requiring authentication tokens in the URL
 process.env.DANGEROUSLY_OMIT_AUTH = 'true';
+process.env.PYTHONUNBUFFERED = '1';
 process.env.PYTHONPATH = '/app';
 
 console.log('Starting MCP server and Inspector processes...');
