@@ -119,13 +119,28 @@ packages/python/code-review-buddy/
 
 ## Testing & Debugging (Without Claude Desktop)
 
-You can test your deployed Render MCP server in your browser using the official **MCP Inspector** tool.
+### Option A: Browser (Deployed Render service)
 
-Run this command **locally on your machine** to connect to your public Render deployment:
+Open the deployed URL directly — the MCP Inspector UI loads and auto-connects to the server:
+
+```
+https://mcp-code-review-buddy.onrender.com
+```
+
+No extra commands needed. The inspector connects automatically on page load.
+
+> **Note:** The Render free plan spins down after inactivity. The first load may take ~30 seconds to cold-start.
+
+### Option B: Local inspector against the deployed server
+
+If you want to run the inspector UI locally pointed at the deployed SSE endpoint:
 
 ```bash
 npx @modelcontextprotocol/inspector https://mcp-code-review-buddy.onrender.com/sse
 ```
 
-Open the link shown in your terminal (typically `http://localhost:6274`) to test all tools and resources interactively on the deployed server.
+> If you see `Proxy Server PORT IS IN USE at port 6277`, a previous inspector session is still running. Kill it with:
+> ```bash
+> lsof -ti:6277 | xargs kill
+> ```
 
