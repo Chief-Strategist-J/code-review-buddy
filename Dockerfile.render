@@ -23,17 +23,15 @@ assert target in content, 'Target string not found in index.js'; \
 open(js_file, 'w').write(content.replace(target, replacement))"
 
 # Inject an auto-connect script into the Inspector UI's index.html.
-# The script polls every 500ms for the Connect button (confirmed text "Connect" in v0.15.0
-# client/src/components/Sidebar.tsx) and clicks it, so the page connects on load.
-RUN python3 -c "
-import glob
-html_file = glob.glob('/usr/local/lib/node_modules/@modelcontextprotocol/inspector/build/client/index.html')[0]
-content = open(html_file).read()
-script = '<script>(function(){var t=setInterval(function(){var b=document.querySelectorAll(\"button\");for(var i=0;i<b.length;i++){if(b[i].textContent.trim()===\"Connect\"){b[i].click();clearInterval(t);return;}}},500);setTimeout(function(){clearInterval(t);},30000);})();</script>'
-assert '</body>' in content, 'Could not find </body> in index.html'
-open(html_file, 'w').write(content.replace('</body>', script + '</body>', 1))
-print('Auto-connect script injected into index.html')
-"
+# Uses the same semicolon+backslash style as the patch above to stay on one logical line.
+# The script polls every 500ms for a button with text "Connect" (verified in v0.15.0
+# client/src/components/Sidebar.tsx line 745) and clicks it automatically on page load.
+RUN python3 -c "import glob; \
+html_file = glob.glob('/usr/local/lib/node_modules/@modelcontextprotocol/inspector/build/client/index.html')[0]; \
+content = open(html_file).read(); \
+script = '<script>(function(){var t=setInterval(function(){var b=document.querySelectorAll(\"button\");for(var i=0;i<b.length;i++){if(b[i].textContent.trim()===\"Connect\"){b[i].click();clearInterval(t);return;}}},500);setTimeout(function(){clearInterval(t);},30000);})();</script>'; \
+assert '</body>' in content; \
+open(html_file, 'w').write(content.replace('</body>', script + '</body>', 1))"
 
 # Copy project files and install package without re-downloading dependencies
 COPY packages/python/code-review-buddy /app
