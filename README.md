@@ -119,15 +119,13 @@ packages/python/code-review-buddy/
 
 ## Testing & Debugging (Without Claude Desktop)
 
-You can test the MCP server in your browser using the official **MCP Inspector** tool without needing to configure a desktop app.
+You can test your deployed Render MCP server in your browser using the official **MCP Inspector** tool.
 
-Run the following command to spin up the inspector interface:
+Run this command **locally on your machine** to connect to your public Render deployment:
 
 ```bash
-npx @modelcontextprotocol/inspector docker run -i --rm \
-  -v /home/btpl-lap-22/live/codeReview:/project \
-  -e REPO_ROOT=/project \
-  chiefj/code-review-buddy:latest
+npx @modelcontextprotocol/inspector https://mcp-code-review-buddy.onrender.com/sse
 ```
 
-Open the link shown in your terminal (typically `http://localhost:6274`) to test all tools and resources interactively.
+Open the link shown in your terminal (typically `http://localhost:6274`) to test all tools and resources interactively on the deployed server.
+
