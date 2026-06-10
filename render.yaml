@@ -7,3 +7,8 @@ services:
     envVars:
       - key: REPO_ROOT
         value: /app
+      - key: PYTHONPATH
+        value: /app
+      - key: DANGEROUSLY_OMIT_AUTH
+        value: "true"
+
