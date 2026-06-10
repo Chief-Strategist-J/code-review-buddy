@@ -3,11 +3,7 @@ from .tools import register_tools
 from .router import register_resources
 
 # Initialize FastMCP server
-mcp = FastMCP(
-    name="code-review-buddy",
-    version="1.0.0",
-    description="A local MCP server for repository inspection, diffing, and scan utilities"
-)
+mcp = FastMCP("code-review-buddy")
 
 # Register tools and resources
 register_tools(mcp)
