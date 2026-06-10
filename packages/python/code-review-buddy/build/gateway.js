@@ -26,6 +26,16 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Redirect bare root to the inspector UI pre-loaded with the SSE endpoint so it auto-connects.
+  if (req.url === '/') {
+    const proto = req.headers['x-forwarded-proto'] || 'https';
+    const host = req.headers.host;
+    const sseUrl = `${proto}://${host}/sse`;
+    res.writeHead(302, { 'Location': `/?url=${encodeURIComponent(sseUrl)}&autoConnect=true` });
+    res.end();
+    return;
+  }
+
   // Route /config, /sse, /messages to the Proxy Server (6277).
   // Route static assets and UI routes to the Inspector Web Server (6274).
   const isProxy = req.url.startsWith('/config') || req.url.startsWith('/sse') || req.url.startsWith('/see') || req.url.startsWith('/messages');
