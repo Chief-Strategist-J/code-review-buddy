@@ -2,14 +2,11 @@ services:
   - type: web
     name: mcp-code-review-buddy
     runtime: docker
-    dockerfilePath: build/Dockerfile
+    dockerfilePath: Dockerfile.render
     plan: free
     envVars:
       - key: REPO_ROOT
         value: /app
-      - key: MCP_TRANSPORT
-        value: sse
-      - key: PORT
-        value: 10000
+
 
 
