@@ -6,6 +6,9 @@ An internal Model Context Protocol (MCP) server that grants AI agents (e.g. Clau
 The project follows the API-First and modular folder structure:
 ```
 packages/python/code-review-buddy/
+├── build/
+│   ├── Dockerfile                  # Production container definitions
+│   └── .gitkeep
 ├── contracts/
 │   └── mcp/
 │       ├── tools.json              # Contract defining tool signatures
@@ -45,6 +48,8 @@ packages/python/code-review-buddy/
 
 ## Installation & Setup
 
+### Option A: Local Python Setup (Developer Mode)
+
 1. **Prerequisites**:
    Ensure you have Python 3.10+ installed on your machine.
 
@@ -78,3 +83,37 @@ packages/python/code-review-buddy/
      }
    }
    ```
+
+---
+
+### Option B: Docker Setup (Team Distribution Mode)
+
+1. **Build the Docker Image**:
+   Build the image from the root of the sub-package:
+   ```bash
+   cd packages/python/code-review-buddy
+   docker build -t code-review-buddy -f build/Dockerfile .
+   ```
+
+2. **Claude Desktop Integration**:
+   Add the container execution command to your `claude_desktop_config.json`. Note that you must mount your target code repository to a volume in the container (e.g. `/project`) so the container has access to read files and run git:
+   ```json
+   {
+     "mcpServers": {
+       "code-review-buddy": {
+         "command": "docker",
+         "args": [
+           "run",
+           "-i",
+           "--rm",
+           "-v",
+           "/home/btpl-lap-22/live/codeReview:/project",
+           "-e",
+           "REPO_ROOT=/project",
+           "code-review-buddy:latest"
+         ]
+       }
+     }
+   }
+   ```
+

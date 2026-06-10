@@ -12,11 +12,12 @@ htmlcov/
 .idea/
 
 # Distribution
-build/
+/build/
 dist/
 *.egg-info/
 .venv/
 venv/
+!/packages/python/code-review-buddy/build/
 
 # Environment rules
 rules/
