@@ -19,26 +19,34 @@ const inspector = spawn('npx', [
 
 // 2. Start a single-port gateway on Port 10000 (exposing to Render)
 const server = http.createServer((req, res) => {
-  // Respond to Render health checks immediately without depending on the inspector being ready.
+  // /health must return JSON {status:"ok"} — Render deploy check needs 200, inspector proxy
+  // health check (checkProxyHealth in useConnection.ts) needs response.json().status === "ok".
   if (req.url === '/health') {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('OK');
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: 'ok' }));
     return;
   }
 
-  // Redirect bare root to the inspector UI pre-loaded with the SSE endpoint so it auto-connects.
+  // Redirect bare root so the inspector loads with MCP_PROXY_FULL_ADDRESS set to the public
+  // host, overriding the localhost:6277 default that would be unreachable from the browser.
   if (req.url === '/') {
     const proto = req.headers['x-forwarded-proto'] || 'https';
     const host = req.headers.host;
-    const sseUrl = `${proto}://${host}/sse`;
-    res.writeHead(302, { 'Location': `/?url=${encodeURIComponent(sseUrl)}&autoConnect=true` });
+    res.writeHead(302, { 'Location': `/?MCP_PROXY_FULL_ADDRESS=${encodeURIComponent(`${proto}://${host}`)}` });
     res.end();
     return;
   }
 
-  // Route /config, /sse, /messages to the Proxy Server (6277).
-  // Route static assets and UI routes to the Inspector Web Server (6274).
-  const isProxy = req.url.startsWith('/config') || req.url.startsWith('/sse') || req.url.startsWith('/see') || req.url.startsWith('/messages');
+  // Route proxy endpoints to the Inspector Proxy Server (6277).
+  // /stdio  — browser→proxy for stdio transport (the main connection path)
+  // /sse    — browser→proxy for SSE transport
+  // /mcp    — browser→proxy for streamable-http transport
+  // /config — inspector UI fetches server defaults on load
+  // /messages — SSE POST message channel
+  // Route everything else (static assets, UI) to the Inspector Web Server (6274).
+  const isProxy = req.url.startsWith('/stdio') || req.url.startsWith('/sse') ||
+    req.url.startsWith('/see') || req.url.startsWith('/mcp') ||
+    req.url.startsWith('/config') || req.url.startsWith('/messages');
   const targetPort = isProxy ? 6277 : 6274;
 
   console.log(`[Gateway] --> ${req.method} ${req.url} (Routing to local port ${targetPort})`);
@@ -52,8 +60,8 @@ const server = http.createServer((req, res) => {
   }, (targetRes) => {
     console.log(`[Gateway] <-- ${targetRes.statusCode} for ${req.url} from local port ${targetPort}`);
     const headers = { ...targetRes.headers };
-    // Prevent Cloudflare/Render Nginx reverse proxies from buffering SSE streams
-    if (req.url.includes('/sse') || req.url.includes('/see')) {
+    // Prevent Cloudflare/Render Nginx from buffering streaming responses
+    if (req.url.startsWith('/sse') || req.url.startsWith('/see') || req.url.startsWith('/stdio')) {
       headers['x-accel-buffering'] = 'no';
       headers['cache-control'] = 'no-cache';
       headers['connection'] = 'keep-alive';
