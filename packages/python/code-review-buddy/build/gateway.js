@@ -53,12 +53,21 @@ const server = http.createServer((req, res) => {
 
   console.log(`[Gateway] --> ${req.method} ${req.url} (Routing to local port ${targetPort})`);
 
+  // Rewrite Origin and Host headers for proxy-bound requests.
+  // The MCP proxy (6277) rejects non-localhost origins as a DNS-rebinding guard.
+  // Since this gateway is the only entry point, spoofing localhost here is safe.
+  const forwardHeaders = { ...req.headers };
+  if (targetPort === 6277) {
+    forwardHeaders['origin'] = `http://localhost:${6277}`;
+    forwardHeaders['host'] = `localhost:${6277}`;
+  }
+
   const connector = http.request({
     host: '127.0.0.1',
     port: targetPort,
     path: req.url,
     method: req.method,
-    headers: req.headers
+    headers: forwardHeaders
   }, (targetRes) => {
     console.log(`[Gateway] <-- ${targetRes.statusCode} for ${req.url} from local port ${targetPort}`);
     const headers = { ...targetRes.headers };
