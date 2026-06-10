@@ -80,6 +80,20 @@
         },
         "required": ["directory"]
       }
+    },
+    {
+      "name": "find_large_functions",
+      "description": "Identify large functions (over 40 lines) in a file using a simple heuristic.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string",
+            "description": "Relative path to the file from the repo root"
+          }
+        },
+        "required": ["file_path"]
+      }
     }
   ]
 }

@@ -19,9 +19,16 @@ const inspector = spawn('npx', [
 
 // 2. Start a single-port gateway on Port 10000 (exposing to Render)
 const server = http.createServer((req, res) => {
-  // Route /config, /health, /sse, /messages to the Proxy Server (6277).
+  // Respond to Render health checks immediately without depending on the inspector being ready.
+  if (req.url === '/health') {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('OK');
+    return;
+  }
+
+  // Route /config, /sse, /messages to the Proxy Server (6277).
   // Route static assets and UI routes to the Inspector Web Server (6274).
-  const isProxy = req.url.startsWith('/config') || req.url.startsWith('/health') || req.url.startsWith('/sse') || req.url.startsWith('/see') || req.url.startsWith('/messages');
+  const isProxy = req.url.startsWith('/config') || req.url.startsWith('/sse') || req.url.startsWith('/see') || req.url.startsWith('/messages');
   const targetPort = isProxy ? 6277 : 6274;
 
   console.log(`[Gateway] --> ${req.method} ${req.url} (Routing to local port ${targetPort})`);
