@@ -10,8 +10,6 @@ console.log('Starting MCP server and Inspector processes...');
 // 1. Spawn the MCP Inspector running locally inside the container
 const inspector = spawn('npx', [
   '@modelcontextprotocol/inspector',
-  '--host', '127.0.0.1',
-  '--port', '6274',
   'python3', '-m', 'src.api.mcp.server'
 ], { 
   stdio: 'inherit',
