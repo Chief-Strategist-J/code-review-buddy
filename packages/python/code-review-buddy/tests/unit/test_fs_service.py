@@ -34,3 +34,17 @@ def test_safe_resolve_traversal(tmp_path: Path) -> None:
     service = FileSystemService(str(tmp_path))
     with pytest.raises(ValueError, match="Path is outside the repository root"):
         service._safe_resolve("../outside.txt")
+
+def test_write_and_update_file(tmp_path: Path) -> None:
+    service = FileSystemService(str(tmp_path))
+    res = service.write_file("new_dir/test.txt", "hello world")
+    assert res == "Successfully wrote to new_dir/test.txt"
+    assert (tmp_path / "new_dir" / "test.txt").read_text() == "hello world"
+
+    res_up = service.update_file("new_dir/test.txt", "world", "buddy")
+    assert res_up == "Successfully updated new_dir/test.txt"
+    assert (tmp_path / "new_dir" / "test.txt").read_text() == "hello buddy"
+
+    with pytest.raises(ValueError, match="Target text not found"):
+        service.update_file("new_dir/test.txt", "missing", "new")
+

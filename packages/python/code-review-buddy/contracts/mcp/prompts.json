@@ -1,0 +1,276 @@
+{
+  "prompts": [
+    {
+      "name": "review_file_prompt",
+      "description": "Prompt to review the contents of a specific file.",
+      "arguments": [
+        {
+          "name": "file_path",
+          "description": "Relative path to the file from the repo root",
+          "required": true
+        },
+        {
+          "name": "content",
+          "description": "The text content of the file",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "commit_message_prompt",
+      "description": "Prompt to generate a conventional commit message for a git diff.",
+      "arguments": [
+        {
+          "name": "diff",
+          "description": "The git diff output to analyze",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "create_file_prompt",
+      "description": "Prompt to generate code for a new file with specified requirements.",
+      "arguments": [
+        {
+          "name": "file_path",
+          "description": "Relative path to the file to create",
+          "required": true
+        },
+        {
+          "name": "requirements",
+          "description": "Functional requirements for the new file's content",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "write_and_commit_prompt",
+      "description": "Prompt instructing the agent to write a file and then commit and push it.",
+      "arguments": [
+        {
+          "name": "file_path",
+          "description": "Relative path to the file to write",
+          "required": true
+        },
+        {
+          "name": "content",
+          "description": "The content to write to the file",
+          "required": true
+        },
+        {
+          "name": "commit_message",
+          "description": "The git commit message to use",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "update_and_commit_prompt",
+      "description": "Prompt instructing the agent to update a file and then commit and push it.",
+      "arguments": [
+        {
+          "name": "file_path",
+          "description": "Relative path to the file to update",
+          "required": true
+        },
+        {
+          "name": "target_text",
+          "description": "The exact target text to replace",
+          "required": true
+        },
+        {
+          "name": "replacement_text",
+          "description": "The replacement text to put in",
+          "required": true
+        },
+        {
+          "name": "commit_message",
+          "description": "The git commit message to use",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "advanced_diff_prompt",
+      "description": "Prompt instructing the agent to run and analyze an advanced diff between branches.",
+      "arguments": [
+        {
+          "name": "base_branch",
+          "description": "Base branch to compare from",
+          "required": true
+        },
+        {
+          "name": "compare_branch",
+          "description": "Compare branch to compare to",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "branch_history_prompt",
+      "description": "Prompt to analyze the visual branch history graph of the repository.",
+      "arguments": []
+    },
+    {
+      "name": "file_history_prompt",
+      "description": "Prompt to perform code archaeology on a specific file's commit history.",
+      "arguments": [
+        {
+          "name": "file_path",
+          "description": "Relative path to the file to analyze",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "file_blame_prompt",
+      "description": "Prompt to run blame on a file to analyze authorship and trace refactor histories.",
+      "arguments": [
+        {
+          "name": "file_path",
+          "description": "Relative path to the file to analyze",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "inspect_commit_prompt",
+      "description": "Prompt to inspect details of a specific commit SHA.",
+      "arguments": [
+        {
+          "name": "commit_sha",
+          "description": "The commit SHA to inspect",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "check_merge_safety_prompt",
+      "description": "Prompt to simulate merge safety checks and conflict resolutions.",
+      "arguments": [
+        {
+          "name": "base_branch",
+          "description": "Base branch to compare from",
+          "required": true
+        },
+        {
+          "name": "compare_branch",
+          "description": "Compare branch to compare to",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "analyze_churn_risk_prompt",
+      "description": "Prompt to analyze code churn risk, ownership entropy, and logical couplings.",
+      "arguments": [
+        {
+          "name": "base_branch",
+          "description": "Base branch to compare from",
+          "required": true
+        },
+        {
+          "name": "compare_branch",
+          "description": "Compare branch to compare to",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "detect_code_similarity_prompt",
+      "description": "Prompt to look for copy-pasted blocks and rename actions across branches.",
+      "arguments": [
+        {
+          "name": "base_branch",
+          "description": "Base branch to compare from",
+          "required": true
+        },
+        {
+          "name": "compare_branch",
+          "description": "Compare branch to compare to",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "get_semantic_diff_prompt",
+      "description": "Prompt to check semantic diffs: API signature updates and complexity metrics.",
+      "arguments": [
+        {
+          "name": "base_branch",
+          "description": "Base branch to compare from",
+          "required": true
+        },
+        {
+          "name": "compare_branch",
+          "description": "Compare branch to compare to",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "query_object_graph_prompt",
+      "description": "Prompt to query the lower-level Git object graph or reflogs.",
+      "arguments": [
+        {
+          "name": "action",
+          "description": "Action type: 'reachability', 'ancestry_path', 'reflog', or 'blob_find'",
+          "required": true
+        },
+        {
+          "name": "param1",
+          "description": "First parameter (e.g. commit hash, ref name, or blob SHA)",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "get_diff_with_algorithm_prompt",
+      "description": "Prompt instructing the agent to run a diff with specific algorithms (histogram, patience, etc.).",
+      "arguments": [
+        {
+          "name": "base_branch",
+          "description": "Base branch to compare from",
+          "required": true
+        },
+        {
+          "name": "compare_branch",
+          "description": "Compare branch to compare to",
+          "required": true
+        },
+        {
+          "name": "algorithm",
+          "description": "The diff algorithm to use (myers, patience, histogram, minimal)",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "search_repository_prompt",
+      "description": "Prompt to search the repository for patterns or variables.",
+      "arguments": [
+        {
+          "name": "query",
+          "description": "The search pattern",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "run_pr_audit_prompt",
+      "description": "Prompt instructing the agent to execute the full automated PR audit report.",
+      "arguments": [
+        {
+          "name": "base_branch",
+          "description": "Base branch to compare from",
+          "required": true
+        },
+        {
+          "name": "compare_branch",
+          "description": "Compare branch to compare to",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

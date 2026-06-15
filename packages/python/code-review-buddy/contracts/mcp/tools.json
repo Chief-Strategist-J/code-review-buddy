@@ -94,6 +94,209 @@
         },
         "required": ["file_path"]
       }
+    },
+    {
+      "name": "write_file",
+      "description": "Write content to a file, creating parent directories if necessary.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string",
+            "description": "Relative path to the file from the repo root"
+          },
+          "content": {
+            "type": "string",
+            "description": "The text content to write"
+          }
+        },
+        "required": ["file_path", "content"]
+      }
+    },
+    {
+      "name": "update_file",
+      "description": "Update a file by replacing target_text with replacement_text.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string",
+            "description": "Relative path to the file from the repo root"
+          },
+          "target_text": {
+            "type": "string",
+            "description": "The exact string to find in the file"
+          },
+          "replacement_text": {
+            "type": "string",
+            "description": "The replacement content"
+          }
+        },
+        "required": ["file_path", "target_text", "replacement_text"]
+      }
+    },
+    {
+      "name": "commit_and_push_file",
+      "description": "Stage, commit, and push a specific file to GitHub.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string",
+            "description": "Relative path to the file from the repo root"
+          },
+          "commit_message": {
+            "type": "string",
+            "description": "The git commit message"
+          }
+        },
+        "required": ["file_path", "commit_message"]
+      }
+    },
+    {
+      "name": "write_and_publish_file",
+      "description": "Write content to a file, stage it, commit it, and push it in a single step-by-step workflow.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string",
+            "description": "Relative path to the file from the repo root"
+          },
+          "content": {
+            "type": "string",
+            "description": "The text content to write"
+          },
+          "commit_message": {
+            "type": "string",
+            "description": "The git commit message"
+          }
+        },
+        "required": ["file_path", "content", "commit_message"]
+      }
+    },
+    {
+      "name": "update_and_publish_file",
+      "description": "Update a file by replacing target_text with replacement_text, stage it, commit it, and push it in a single step-by-step workflow.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string",
+            "description": "Relative path to the file from the repo root"
+          },
+          "target_text": {
+            "type": "string",
+            "description": "The exact string to find in the file"
+          },
+          "replacement_text": {
+            "type": "string",
+            "description": "The replacement content"
+          },
+          "commit_message": {
+            "type": "string",
+            "description": "The git commit message"
+          }
+        },
+        "required": ["file_path", "target_text", "replacement_text", "commit_message"]
+      }
+    },
+    {
+      "name": "analyze_churn_risk",
+      "description": "Compute advanced churn risk scores, authorship entropy, or logical couplings.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "base_branch": {
+            "type": "string",
+            "default": "main",
+            "description": "Base branch to compare from"
+          },
+          "compare_branch": {
+            "type": "string",
+            "default": "HEAD",
+            "description": "Compare branch to compare to"
+          },
+          "file_path": {
+            "type": "string",
+            "description": "Optional file path to compute specific ownership/author entropy for"
+          }
+        }
+      }
+    },
+    {
+      "name": "detect_code_similarity",
+      "description": "Find copy-pasted code blocks, rename thresholds, or structural similarity across branches.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "base_branch": {
+            "type": "string",
+            "default": "main",
+            "description": "Base branch to compare from"
+          },
+          "compare_branch": {
+            "type": "string",
+            "default": "HEAD",
+            "description": "Compare branch to compare to"
+          },
+          "similarity_threshold": {
+            "type": "integer",
+            "default": 50,
+            "description": "Similarity percentage threshold for rename/copy detection"
+          },
+          "target_file": {
+            "type": "string",
+            "description": "Optional file path to limit target searches"
+          }
+        }
+      }
+    },
+    {
+      "name": "get_semantic_diff",
+      "description": "Extract API definition/signature changes and complexity proxy additions.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "base_branch": {
+            "type": "string",
+            "default": "main",
+            "description": "Base branch to compare from"
+          },
+          "compare_branch": {
+            "type": "string",
+            "default": "HEAD",
+            "description": "Compare branch to compare to"
+          },
+          "file_pattern": {
+            "type": "string",
+            "default": "*",
+            "description": "Glob file pattern filter"
+          }
+        }
+      }
+    },
+    {
+      "name": "query_object_graph",
+      "description": "Query Git object graph, ancestry paths, reflogs, reachabilities, or blob matches.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Action type: 'reachability', 'ancestry_path', 'reflog', or 'blob_find'"
+          },
+          "param1": {
+            "type": "string",
+            "description": "First parameter (e.g. commit hash, ref name, or blob SHA)"
+          },
+          "param2": {
+            "type": "string",
+            "description": "Second parameter if required by action"
+          }
+        },
+        "required": ["action", "param1"]
+      }
     }
   ]
 }
