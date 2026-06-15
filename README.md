@@ -144,3 +144,79 @@ npx @modelcontextprotocol/inspector https://mcp-code-review-buddy.onrender.com/s
 > lsof -ti:6277 | xargs kill
 > ```
 
+---
+
+## GitHub Actions CI Integration (Like CodeRabbit)
+
+You can easily set up Code Review Buddy in your GitHub repositories to run automated audits and code reviews on every Pull Request.
+
+### 1. Create a Review Runner Script (`.github/scripts/review.py`)
+Create a python script in your repository that calls the MCP tool features. E.g.:
+
+```python
+import os
+import sys
+from code_review_buddy.features.git.service import GitService
+
+repo_root = os.getcwd()
+git_service = GitService(repo_root)
+
+# Run full automated PR audit
+audit_results = git_service.run_pr_audit(base_branch="origin/main", compare_branch="HEAD")
+
+# Post audit comment back to GitHub PR
+print("### 🤖 Automated Code Review Audit")
+print(f"- **Commit Count**: {audit_results['commit_count']}")
+print(f"- **Complexity Additions**: {audit_results['complexity_additions']}")
+print("\n#### ⚠️ Potential Secrets Staged")
+for secret in audit_results['potential_secrets_exposed']:
+    print(f"- `{secret}`")
+print("\n#### 📊 Code Churn Risk Files")
+for item in audit_results['high_churn_files']:
+    print(f"- `{item['file']}` ({item['changes']} modifications)")
+```
+
+### 2. Configure GitHub Actions Workflow (`.github/workflows/code-review.yml`)
+Create a workflow that checks out the repository, installs Python dependencies, and runs your review script on every Pull Request:
+
+```yaml
+name: AI Code Review (CodeRabbit style)
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install mcp fastmcp
+          # Install code-review-buddy directly from Docker Hub
+          docker pull chiefj/code-review-buddy:latest
+
+      - name: Run Code Review Audit
+        run: |
+          python .github/scripts/review.py > review_comment.md
+
+      - name: Post Comment to PR
+        uses: mshick/add-pr-comment@v2
+        with:
+          file-path: review_comment.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+
